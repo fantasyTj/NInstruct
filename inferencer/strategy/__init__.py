@@ -4,7 +4,10 @@ from .what_are_step_imgs_doing import what_are_step_imgs_doing
 from .what_are_components_nested import what_are_components_nested
 from .what_are_components_flat import what_are_components_flat
 from .how_to_sort_step_imgs import how_to_sort_step_imgs
-from .generated_by_GPT import generated_by_GPT
+from .what_is_next_step_no_img import what_is_next_step_no_img
+from .what_is_next_step_with_img import what_is_next_step_with_img
+from .how_to_finish_dish import how_to_finish_dish
+from .what_new_task_generated_by_GPT import what_new_task_generated_by_GPT
 
 STRATEGIES = {
     'what_is_dish': what_is_dish,
@@ -13,5 +16,8 @@ STRATEGIES = {
     'what_are_components_nested': what_are_components_nested,
     'what_are_components_flat': what_are_components_flat,
     'how_to_sort_step_imgs': how_to_sort_step_imgs,
-    'generated_by_GPT': generated_by_GPT
+    'what_is_next_step_no_img': what_is_next_step_no_img,
+    'what_is_next_step_with_img': what_is_next_step_with_img,
+    'how_to_finish_dish': how_to_finish_dish,
+    'what_new_task_generated_by_GPT': what_new_task_generated_by_GPT
 }

@@ -1,7 +1,8 @@
 import os
+import random
 from typing import List, Any, Dict
 
-from utils import download_img, make_data_dict, ID_COUNTER, LOGGER, log_failed_img
+from utils import download_img, make_data_dict, ID_COUNTER, LOGGER, log_failed_img, log_img
 from configs import IMG_SAVE_PATH
 
 def what_are_components_flat(
@@ -9,17 +10,20 @@ def what_are_components_flat(
     what_are_components_flat_skipped_keys: List[str] = [],
     **kwargs) -> List[Any]:
     results = []
-    img_file = os.path.join(IMG_SAVE_PATH, f"{data['id']}_{str(ID_COUNTER)}_{what_are_components_flat.__name__}.jpg")
 
-    if os.path.isfile(img_file):
-        LOGGER.warning(f'img has been downloaded in {what_are_components_flat.__name__}: [{img_file}]')
+    cur_data_img = random.choice(data['img']) if isinstance(data['img'], list) else data['img']
+    img_file_name = log_img(cur_data_img)
+    img_file = os.path.join(IMG_SAVE_PATH, img_file_name)
 
-    if not download_img(
-        data['img'],
-        img_file
-        ):
-        LOGGER.debug(f"img download failed, url: [{data['img']}]")
-        log_failed_img(str(ID_COUNTER), data['img'], img_file)
+    # if os.path.isfile(img_file):
+    #     LOGGER.warning(f'img has been downloaded in {what_are_components_flat.__name__}: [{img_file}]')
+
+    # if not download_img(
+    #     data['img'],
+    #     img_file
+    #     ):
+    #     LOGGER.debug(f"img download failed, url: [{data['img']}]")
+    #     log_failed_img(str(ID_COUNTER), data['img'], img_file)
         # return results
 
     for first_component in data['components_flat'].keys():

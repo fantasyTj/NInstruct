@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
 
-from utils import load_pickle, preprocess_text
+from utils import load_pickle, preprocess_text, preprocess_strip_begin_numbers, merge_dicts
 from inferencer import BaseInferencer
 
 class DouGuoInferencer(BaseInferencer):
@@ -20,12 +20,12 @@ class DouGuoInferencer(BaseInferencer):
             'img': cur_data['title_img'],
             'type': cur_data['title_img_type'],
             'description': cur_data['description'],
-            'components_nested': {k: {list(i.keys())[0]: list(i.values())[0]} for k in cur_data['components'].keys() for i in cur_data['components'][k]},
-            # 'components_flat': {list(i.values())[0]: list(i.keys())[0] for i in cur_data['components']['方法']},
-            'components_flat': {},
+            'components_nested': {k: merge_dicts(cur_data['components'][k]) for k in cur_data['components'].keys()},
+            'components_flat': {v:k for k,v in merge_dicts(cur_data['components']['方法']).items()} if '方法' in cur_data['components'].keys() else {},
             'steps': cur_data['steps'],
-            'comment_img':cur_data['url']
+            'comment_img': cur_data['url']
         }
+        cur_data['components_nested'].pop('方法', None)
 
         # NOTE: 完善类型检查
         assert isinstance(cur_data['title'], str)
@@ -48,7 +48,7 @@ class DouGuoInferencer(BaseInferencer):
         for key in cur_data['components_flat'].keys():
             cur_data['components_flat'][key] = preprocess_text(cur_data['components_flat'][key])
         for i in range(len(cur_data['steps'])):
-            cur_data['steps'][i]['description'] = preprocess_text(cur_data['steps'][i]['description'])
+            cur_data['steps'][i]['description'] = preprocess_text(preprocess_strip_begin_numbers(cur_data['steps'][i]['description']))
 
         return cur_data
 

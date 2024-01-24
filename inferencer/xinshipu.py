@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
 import re
-from utils import load_pickle, preprocess_text
+from utils import load_pickle, preprocess_text, preprocess_strip_begin_numbers
 from inferencer import BaseInferencer
 import jieba.posseg as pseg
 
@@ -128,9 +128,6 @@ class XinshipuInferencer(BaseInferencer):
             if 'img' not in step_key:
                 cur_data['steps'][i]['img'] = ''
 
-        if len(cur_data['steps']) != 0:
-            print(cur_data['steps'])
-
         # NOTE: 完善类型检查
         assert isinstance(cur_data['title'], str)
 
@@ -154,6 +151,6 @@ class XinshipuInferencer(BaseInferencer):
         for key in cur_data['components_flat'].keys():
             cur_data['components_flat'][key] = preprocess_text(cur_data['components_flat'][key])
         for i in range(len(cur_data['steps'])):
-            cur_data['steps'][i]['description'] = preprocess_text(cur_data['steps'][i]['description'])
+            cur_data['steps'][i]['description'] = preprocess_text(preprocess_strip_begin_numbers(cur_data['steps'][i]['description']))
 
         return cur_data

@@ -1,10 +1,12 @@
 from inferencer.base import BaseInferencer
-from inferencer.meichichina import MeishiChinaInferencer
+from inferencer.meishichina import MeishiChinaInferencer
 from inferencer.daydaycook import DaydaycookInferencer
 from inferencer.douguo import DouGuoInferencer
 from inferencer.xiachufang import XiachufangInferencer
 from inferencer.xinshipu import XinshipuInferencer
 from inferencer.meishijie import MeishiJieInferencer
+from inferencer.shipuxiu import ShipuxiuInferencer
+
 __all__ = [
     'BaseInferencer',
     'MeishiChinaInferencer',
@@ -12,7 +14,8 @@ __all__ = [
     'DouGuoInferencer',
     'XiachufangInferencer',
     'XinshipuInferencer',
-    'MeishiJieInferencer'
+    'MeishiJieInferencer',
+    'ShipuxiuInferencer'
     ]
 
 EXP_STR2CLASS_NAME = {
@@ -21,5 +24,6 @@ EXP_STR2CLASS_NAME = {
     'douguo':'DouGuoInferencer',
     'xiachufang': 'XiachufangInferencer',
     'xinshipu': 'XinshipuInferencer',
-    'meishijie': 'MeishiJieInferencer'
+    'meishijie': 'MeishiJieInferencer',
+    'shipuxiu': 'ShipuxiuInferencer'
 }
