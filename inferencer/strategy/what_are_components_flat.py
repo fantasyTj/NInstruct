@@ -29,12 +29,24 @@ def what_are_components_flat(
     for first_component in data['components_flat'].keys():
         if first_component in what_are_components_flat_skipped_keys:
             continue
+        
+        # 增加数据的多样性，一次性可以询问多个成分
+        first_component_list = []
+        sample_size = random.choice(list(range(len(data['components_flat'].keys()))))
+        if sample_size:
+            first_component_list.extend(random.choices(list(data['components_flat'].keys()), k=sample_size))
+        if first_component not in first_component_list:
+            first_component_list.append(first_component)
         results.append(
             make_data_dict(
                 cur_id=str(ID_COUNTER),
+                # cur_conversations=[
+                #     f"图：<img>{img_file}</img>，图中这道菜的{first_component}如何？",
+                #     f"{data['components_flat'][first_component]}。"
+                # ]
                 cur_conversations=[
-                    f"图：<img>{img_file}</img>，图中这道菜的{first_component}怎么样？",
-                    f"{data['components_flat'][first_component]}。"
+                    f"图：<img>{img_file}</img>，图中这道菜的{'，'.join(first_component_list)}如何？",
+                    '，'.join([i+'：'+data['components_flat'][i] for i in first_component_list])+'。'
                 ]
             )
         )

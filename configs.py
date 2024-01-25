@@ -10,10 +10,15 @@ DATA_PATHS = {
     'meishijie':f'/data/zhangyk/vllm/meishijie'
 }
 
-JSON_SAVE_PATH = 'vllmnd'
-IMG_SAVE_PATH = 'vllmnd/imgs'
-IMG_DOWNLOAD_FAILED_LOGS = 'vllmnd/img_download_failed.csv'
-IMG_DOWNLOAD_TODO = 'vllmnd/imgs.csv'
+# JSON_SAVE_PATH = 'vllmnd'
+# IMG_SAVE_PATH = 'vllmnd/imgs'
+# IMG_DOWNLOAD_FAILED_LOGS = 'vllmnd/img_download_failed.csv'
+# IMG_DOWNLOAD_TODO = 'vllmnd/imgs.csv'
+
+JSON_SAVE_PATH = 'vllmnd2'
+IMG_SAVE_PATH = '/data/zhangyk/vllm/imgs'
+IMG_DOWNLOAD_FAILED_LOGS = 'vllmnd2/img_download_failed.csv'
+IMG_DOWNLOAD_TODO = 'vllmnd2/imgs.csv'
 
 Path(IMG_SAVE_PATH).mkdir(parents=True, exist_ok=True)
 

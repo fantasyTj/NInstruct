@@ -14,17 +14,17 @@ class MeishiJieInferencer(BaseInferencer):
              file_name: str,
              **kwargs) -> Dict[str, Any]:
         cur_data = load_pickle(file_name)
-        # ii = list(cur_data['components'].keys())
-        # ii.remove('方法')
+        ii = list(cur_data['components'].keys())
+        ii.remove('方法')
         cur_data = {
             'id': cur_data['id'],
             'title': cur_data['title'],
             'img': cur_data['title_img'],
             'type': cur_data['title_img_type'],
             'description': cur_data['description'],
-            'components_nested': {k: merge_dicts(cur_data['components'][k]) for k in cur_data['components'].keys()},
+            'components_nested': {k: merge_dicts(cur_data['components'][k]) if len(cur_data['components'][k]) else {} for k in ii},
             # 'components_flat': {'工艺':str(i) for i in cur_data['components']['方法']},
-            'components_flat': {'工艺': cur_data['components']['方法']} if type(cur_data['components']['方法'], str) else {'工艺': ' '.join(cur_data['components']['方法'])} if '方法' in cur_data['components'].keys() else {},
+            'components_flat': {'工艺': cur_data['components']['方法']} if type(cur_data['components']['方法'])==str else {'工艺': ' '.join(cur_data['components']['方法'])} if '方法' in cur_data['components'].keys() else {},
             'steps': cur_data['steps'],
         }
         cur_data['components_nested'].pop('方法', None)

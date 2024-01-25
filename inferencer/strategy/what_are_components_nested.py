@@ -45,12 +45,24 @@ def what_are_components_nested(
         for second_component in data['components_nested'][first_component].keys():
             if first_component in what_are_components_nested_skipped_keys or second_component in what_are_components_nested_skipped_keys:
                 continue
+
+            # 增加数据的多样性，一次性可以询问多个成分
+            second_component_list = []
+            sample_size = random.choice(list(range(len(data['components_nested'][first_component].keys()))))
+            if sample_size:
+                second_component_list.extend(random.choices(list(data['components_nested'][first_component].keys()), k=sample_size))
+            if second_component not in second_component_list:
+                second_component_list.append(second_component)
             results.append(
                 make_data_dict(
                     cur_id=str(ID_COUNTER),
+                    # cur_conversations=[
+                    #     f"图：<img>{img_file}</img>，图中这道菜所需要的{first_component}：{second_component}有多少？",
+                    #     f"{data['components_nested'][first_component][second_component]}。"
+                    # ]
                     cur_conversations=[
-                        f"图：<img>{img_file}</img>，图中这道菜所需要的{first_component}：{second_component}有多少？",
-                        f"{data['components_nested'][first_component][second_component]}。"
+                        f"图：<img>{img_file}</img>，图中这道菜所需要的{first_component}中的{'，'.join(second_component_list)}有多少？",
+                        '，'.join([i+'：'+data['components_nested'][first_component][i] for i in second_component_list])+'。'
                     ]
                 )
             )

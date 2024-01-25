@@ -9,9 +9,12 @@ def what_is_next_step_no_img(
     data: Dict[str, Any],
     **kwargs) -> List[Any]:
     results = []
+    filter_func = lambda x:len(x['description'])>2 and '成品' not in x['description'] # 筛除steps_description中的噪音
     if len(data['steps']) == 0:
         return results
     for i in range(len(data['steps'])-1):
+        if not all([filter_func(data['steps'][i]), filter_func(data['steps'][i+1])]):
+            continue
         results.append(
             make_data_dict(
                 cur_id=str(ID_COUNTER),
