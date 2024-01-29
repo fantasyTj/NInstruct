@@ -7,19 +7,19 @@ from configs import IMG_SAVE_PATH
 
 filter_func = lambda x:len(x['description'])>3 and '成品' not in x['description'] # 筛除steps_description中的噪音
 
-def what_is_next_step_with_img(data: Dict[str, Any], what_is_next_step_num_iters: int = 1, **kwargs) -> List[Any]:
+def what_is_previous_step_with_img(data: Dict[str, Any], what_is_previous_step_num_iters: int = 1, **kwargs) -> List[Any]:
     results = []
     if len(data['steps']) == 0:
         return results
 
     cur_steps = random.sample(
         list(range(len(data['steps']) - 1)),
-        min(what_is_next_step_num_iters, len(data['steps']) - 1)
+        min(what_is_previous_step_num_iters, len(data['steps']) - 1)
         )
     for i in cur_steps:
         cur_step = data['steps'][i]
-        next_step = data['steps'][i + 1]
-        if not all([filter_func(cur_step), filter_func(next_step)]):
+        pre_step = data['steps'][i - 1]
+        if not all([filter_func(cur_step), filter_func(pre_step)]):
             continue
 
         img_file_name = log_img(cur_step['img'])
@@ -37,18 +37,18 @@ def what_is_next_step_with_img(data: Dict[str, Any], what_is_next_step_num_iters
         results.append(
             make_data_dict_with_type(
                 cur_id=str(ID_COUNTER),
-                type=what_is_next_step_with_img.__name__,
+                type=what_is_previous_step_with_img.__name__,
                 cur_conversations=[
-                    f'在做菜品{data["title"]}时，完成<img>{img_file}</img>后，下一步是什么？',
-                    f'下一步是{remove_punctuation(next_step["description"])}。'
+                    f'在做菜品{data["title"]}时，图<img>{img_file}</img>的上一步是什么？',
+                    f'下一步是{remove_punctuation(pre_step["description"])}。'
                 ]))
         ID_COUNTER.increment()
     return results
 
-def what_is_next_step_with_img_cq(data: Dict[str, Any], 
+def what_is_previous_step_with_img_cq(data: Dict[str, Any], 
                                   opool: Dict[str, Any],
-                                  what_is_next_step_num_iters: int = 1, 
-                                  what_is_next_step_num_choices: int = 4,
+                                  what_is_previous_step_num_iters: int = 1, 
+                                  what_is_previous_step_num_choices: int = 4,
                                   **kwargs) -> List[Any]:
     results = []
     if len(data['steps']) == 0:
@@ -56,12 +56,12 @@ def what_is_next_step_with_img_cq(data: Dict[str, Any],
     pool = list(map(lambda x: remove_punctuation(x['description']), data['steps']))
     cur_steps = random.sample(
             list(range(len(data['steps']) - 1)),
-            min(what_is_next_step_num_iters, len(data['steps']) - 1)
+            min(what_is_previous_step_num_iters, len(data['steps']) - 1)
         )
     for i in cur_steps:
         cur_step = data['steps'][i]
-        next_step = data['steps'][i + 1]
-        if not all([filter_func(cur_step), filter_func(next_step)]):
+        pre_step = data['steps'][i - 1]
+        if not all([filter_func(cur_step), filter_func(pre_step)]):
             continue
 
         img_file_name = log_img(cur_step['img'])
@@ -69,15 +69,15 @@ def what_is_next_step_with_img_cq(data: Dict[str, Any],
 
         if not len(pool) > 1:
             continue
-        what_is_next_step_num_choices = min(what_is_next_step_num_choices, len(pool))
-        choices, golden_idxs = choices_generate(remove_punctuation(next_step['description']), pool, what_is_next_step_num_choices)
+        what_is_previous_step_num_choices = min(what_is_previous_step_num_choices, len(pool))
+        choices, golden_idxs = choices_generate(remove_punctuation(pre_step['description']), pool, what_is_previous_step_num_choices)
 
         results.append(
             make_data_dict_with_type(
                 cur_id=str(ID_COUNTER),
-                type=what_is_next_step_with_img_cq.__name__,
+                type=what_is_previous_step_with_img_cq.__name__,
                 cur_conversations=[
-                    f'在做菜品{data["title"]}时，完成<img>{img_file}</img>后，下一步是什么？\n选项'  
+                    f'在做菜品{data["title"]}时，图<img>{img_file}</img>的上一步是什么？\n选项'  
                     + f"{'，'.join([chr(ord('A')+i)+'.'+choices[i] for i in range(len(choices))])}",
                     f"{''.join([chr(ord('A')+i) for i in golden_idxs])}"
                 ]))

@@ -1,5 +1,8 @@
 from pathlib import Path
 
+import random
+random.seed(42)
+
 DATA_PATHS = {
     'meishichina': f'/data/zhangyk/vllm/meishichina',
     'daydaycook': f'/data/zhangyk/vllm/daydaycook',
@@ -7,7 +10,8 @@ DATA_PATHS = {
     'xiachufang': f'/data/zhangyk/vllm/xiachufang',
     'xinshipu': f'/data/zhangyk/vllm/xinshipu',
     'shipuxiu': f'/data/zhangyk/vllm/shipuxiu',
-    'meishijie':f'/data/zhangyk/vllm/meishijie'
+    'meishijie': f'/data/zhangyk/vllm/meishijie',
+    'food101': f'/data/zhangyk/vllm'
 }
 
 # JSON_SAVE_PATH = 'vllmnd'

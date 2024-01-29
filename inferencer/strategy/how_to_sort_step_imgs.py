@@ -2,20 +2,22 @@ import os
 from typing import List, Any, Dict
 import random
 
-from utils import download_img, make_data_dict, ID_COUNTER, LOGGER, log_failed_img, log_img
+from utils import download_img, make_data_dict, ID_COUNTER, LOGGER, log_failed_img, log_img, make_data_dict_with_type
 from configs import IMG_SAVE_PATH
 
 def how_to_sort_step_imgs(
     data: Dict[str, Any],
-    how_to_sort_num_sorted_imgs: int = 2,
+    how_to_sort_num_sorted_imgs: int = 3,
     how_to_sort_num_iters: int = 1,
     **kwargs) -> List[Any]:
     results = []
     if len(data['steps']) == 0:
         return results
     how_to_sort_num_sorted_imgs = min(len(data['steps']), how_to_sort_num_sorted_imgs)
+    if how_to_sort_num_sorted_imgs < 2:
+        return results
     for _ in range(how_to_sort_num_iters):
-        cur_sampled = random.sample(range(len(data['steps'])), how_to_sort_num_sorted_imgs)
+        cur_sampled = random.sample(range(len(data['steps'])), random.choice(range(2, how_to_sort_num_sorted_imgs + 1)))
         img_file_list = []
         for img_idx in cur_sampled:
             cur_step = data['steps'][img_idx]
@@ -37,8 +39,9 @@ def how_to_sort_step_imgs(
 
         sorted_sampled_indices = sorted(range(len(cur_sampled)), key=lambda i: cur_sampled[i])
         results.append(
-            make_data_dict(
+            make_data_dict_with_type(
                 cur_id=str(ID_COUNTER),
+                type=how_to_sort_step_imgs.__name__,
                 cur_conversations=[
                     '，'.join([f"({cur_idx + 1}) <img>{cur_img_file}</img>" for cur_idx, cur_img_file in enumerate(img_file_list)])
                         + f"，请理解图片中的制作步骤，并按顺序排序：",

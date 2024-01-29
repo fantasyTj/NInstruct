@@ -155,6 +155,15 @@ cython_debug/
 # logging
 logs/
 
+# data
+vllmnd/
+vllmnd2/
+tongj/
+
+# test_code
+main_gpt*
+view_data.py
+
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore

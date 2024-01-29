@@ -7,11 +7,12 @@ import ast
 import time
 import argparse
 from argparse import ArgumentParser
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Union
 import openai
 
 import configs
 from configs import OPEN_AI_KEY, IMG_DOWNLOAD_FAILED_LOGS, IMG_DOWNLOAD_TODO
+import random, string
 
 import hashlib
 
@@ -154,6 +155,32 @@ def make_data_dict(cur_id, cur_conversations):
                 "value": cur_conversations[i]
             } for i in range(len(cur_conversations))
         ]}
+
+def make_data_dict_with_type(cur_id, cur_conversations, type: str):
+    return make_data_dict(cur_id, cur_conversations) | {'type': type}
+
+def is_last_char_punctuation(s):
+    chinese_punctuation = '！？｡。＂＃＄％＆＇（）＊＋，－／：；＜＝＞＠［＼］＾＿｀｛｜｝～｟｠｢｣､、〃》「」『』【】〔〕〖〗〘〙〚〛〜〝〞〟〰〾〿–—‘’‛“”„‟…‧﹏.'
+    all_punctuation = string.punctuation + chinese_punctuation
+    return s[-1] in all_punctuation
+
+remove_punctuation = lambda x: x[:-1] if len(x)>=1 and is_last_char_punctuation(x) else x
+
+def choices_generate(golden: Union[str, List[str]], opool: List[str], total_num: int, sort: bool = True):
+    pool = opool.copy()
+    golden = golden if isinstance(golden, list) else [golden]
+    try:
+        assert all([i in pool for i in golden])
+    except:
+        print(golden, pool)
+    for i in golden:
+        pool.remove(i)
+    choices = random.choices(pool, k=total_num-len(golden)) + golden
+    random.shuffle(choices)
+    if sorted:
+        return choices, sorted([choices.index(i) for i in golden])
+    else:
+        return choices, [choices.index(i) for i in golden]
 
 def save_results(data, data_id2file_name) -> None:
     with open(os.path.join(configs.JSON_SAVE_PATH, 'data.json'), 'w', encoding='utf-8') as json_file:
